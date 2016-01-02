@@ -4,81 +4,36 @@ class GildedRose
     @items = items
   end
 
-  def normal_tick(item)
-    item.quality -= 1
-  end
-  
-  def normal_sellin(item)
-    item.sell_in -= 1
-  end
-  
-  def brie_tick(item)
-    item.quality += 1
-  end
-
-  def sulfuras_tick(item)
-    item.quality = item.quality - item.quality
+  def update_each_item(item)
+    case item.name  
+    when "Aged Brie" 
+      item.quality += 1 if item.sell_in >= 0
+      item.quality += 2 if item.sell_in < 0 
+      item.quality = 50 if item.quality > 50
+      item.sell_in -= 1
+    when "Sulfuras, Hand of Ragnaros"
+      item.quality = 80
+    when "Backstage passes to a TAFKAL80ETC concert"
+      item.quality += 2 if item.sell_in < 11
+      item.quality += 1 if item.sell_in < 6
+      item.quality = 0 if item.sell_in <= 0
+      item.sell_in -= 1
+    else 
+      if item.sell_in < 0
+        item.quality -= 2
+      else
+        item.quality -= 1
+      end
+      item.sell_in -= 1
+    end
+    if item.quality < 0 
+      item.quality = 0
+    end
   end
 
   def update_quality()
     @items.each do |item|
-#      item.name case 
-#    when item.name == "Aged Brie" 
-#      brie_tick(item)
-#      normal_sellin(item)
-#    when item.name == "Backstage passes to a TAFKAL80ETC concert"
-#      
-#    else normal_tick(item)
-#
-#    end
-#
-      if item.name != "Aged Brie" and item.name != "Backstage passes to a TAFKAL80ETC concert"
-
-        if item.quality > 0
-          if item.name != "Sulfuras, Hand of Ragnaros"
-            normal_tick(item)
-          end
-        end
-      else
-
-        if item.quality < 50
-          brie_tick(item)
-          if item.name == "Backstage passes to a TAFKAL80ETC concert"
-            if item.sell_in < 11
-              brie_tick(item) if item.quality < 50
-            end
-            if item.sell_in < 6
-              brie_tick(item) if item.quality < 50
-            end
-          end
-        end
-      end
-
-      if item.name != "Sulfuras, Hand of Ragnaros"
-        normal_sellin(item)
-      end
-
-      if item.sell_in < 0
-        if item.name != "Aged Brie"
-          if item.name != "Backstage passes to a TAFKAL80ETC concert"
-            
-            if item.quality > 0
-              if item.name != "Sulfuras, Hand of Ragnaros"
-                normal_tick(item)
-              end
-            end
-
-          else
-            sulfuras_tick(item)
-          end
-
-        else
-          if item.quality < 50
-            brie_tick(item)
-          end
-        end
-
-      end
+      update_each_item(item)
     end
   end
 end
