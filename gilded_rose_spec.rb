@@ -1,6 +1,6 @@
 require 'simplecov'
 SimpleCov.start
-require File.join(File.dirname(__FILE__), 'original')
+require File.join(File.dirname(__FILE__), 'gilded_rose')
 
 describe Item do 
   it 'has name, sell_in and quality' do
